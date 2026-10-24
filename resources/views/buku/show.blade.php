@@ -1,3 +1,4 @@
+{{-- resources/views/buku/show.blade.php (contoh lengkap) --}}
 @extends('layouts.app')
 
 @section('title', ($buku->title ?? 'Buku tidak ditemukan') . ' — BookStore')
@@ -9,18 +10,29 @@
                 <img src="{{ asset('images/sampul-placeholder.png') }}" class="img-fluid rounded" alt="Sampul {{ $buku->title }}">
             </div>
             <div class="col-md-8">
-                <span class="badge bg-secondary mb-2">{{ $buku->category->name }}</span>
+                
+                <div class="d-flex gap-2">
+                    <span class="badge bg-secondary align-self-start mb-2">{{ $buku->category->name }}</span>
+                    @if ($buku->publisher)
+                        <span class="badge bg-primary align-self-start mb-2">{{ $buku->publisher->name }}</span>
+                    @endif
+                </div>
+
                 <h1>{{ $buku->title }}</h1>
                 <p class="text-muted">Penulis: {{ $buku->author_name }}</p>
+
+                @if ($buku->published_year)
+                    <p class="text-muted">Tahun terbit: {{ $buku->published_year }}</p>
+                @endif
+
                 <p class="harga-buku fs-4">Rp{{ number_format($buku->price, 0, ',', '.') }}</p>
-                <a href="{{ url('/buku') }}" class="btn btn-outline-secondary">&larr; Kembali ke daftar buku</a>
+                <div class="d-flex gap-2">
+                    <a href="{{ url('/buku/' . $buku->id . '/edit') }}" class="btn btn-warning">Ubah</a>
+                    <a href="{{ url('/buku') }}" class="btn btn-outline-secondary">&larr; Kembali ke daftar buku</a>
+                </div>
             </div>
         </div>
     @else
-        <div class="alert alert-warning text-center">
-            <h4>Buku tidak ditemukan</h4>
-            <p>Buku dengan ID {{ $id }} tidak ada di dalam sistem.</p>
-            <a href="{{ url('/buku') }}" class="btn btn-primary">&larr; Kembali ke daftar buku</a>
-        </div>
+        ...{{-- bagian "buku tidak ditemukan", TIDAK berubah dari pertemuan sebelumnya --}}
     @endif
 @endsection

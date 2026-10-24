@@ -1,4 +1,3 @@
-<nav class="navbar navbar-dark bg-dark">
 <nav class="navbar navbar-expand navbar-dark bg-dark">
     <div class="container">
         <a class="navbar-brand" href="{{ url('/buku') }}">BookStore</a>
@@ -9,7 +8,9 @@
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('kategori.index') }}">Kategori</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('penerbit.index') }}">Penerbit</a>
+            </li>
         </ul>
-
     </div>
 </nav>
