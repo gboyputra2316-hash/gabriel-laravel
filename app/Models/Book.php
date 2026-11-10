@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo; // 1. Pastikan baris ini ada
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Book extends Model
 {
@@ -13,13 +14,25 @@ class Book extends Model
         'title',
         'author_name',
         'price',
-        'published_year',
         'cover',
     ];
 
-    // 2. PASTI-KAN method relasi ini ADA dan namanya 'category' (huruf kecil)
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function publisher(): BelongsTo
+    {
+        return $this->belongsTo(Publisher::class);
+    }
+
+    protected function coverUrl(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->cover
+                ? asset('storage/' . $this->cover)
+                : asset('images/sampul-placeholder.png'),
+        );
     }
 }

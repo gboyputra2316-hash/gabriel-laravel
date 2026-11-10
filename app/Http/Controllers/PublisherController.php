@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Publisher;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -103,7 +104,17 @@ class PublisherController extends Controller
     public function destroy(string $id)
     {
         $penerbit = Publisher::findOrFail($id);
-        $penerbit->delete();
+
+        try {
+            $penerbit->delete();
+        } catch (QueryException $e) {
+            if ($e->getCode() !== '23000') {
+                throw $e;
+            }
+
+            return redirect()->route('penerbit.index')
+                ->with('error', 'Penerbit "' . $penerbit->name . '" tidak bisa dihapus karena masih dipakai oleh buku.');
+        }
 
         return redirect()->route('penerbit.index')
             ->with('success', 'Penerbit berhasil dihapus.');

@@ -9,8 +9,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/buku', [BookController::class, 'index']);
-Route::get('/buku/{id}', [BookController::class, 'show']);
+Route::resource('buku', BookController::class);
 
 // Satu baris ini menghasilkan enam route CRUD kategori sekaligus
 // (index, create, store, edit, update, destroy). Halaman detail (show)
