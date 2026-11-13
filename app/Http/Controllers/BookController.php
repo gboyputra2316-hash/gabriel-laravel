@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Models\Book; 
 use App\Models\Category;
 use App\Models\Publisher;
+use App\Models\Author;
 
 
 class BookController extends Controller
@@ -50,11 +51,13 @@ class BookController extends Controller
         return view('buku.create', [
             'daftarKategori' => Category::orderBy('name')->get(),
             'daftarPenerbit' => Publisher::orderBy('name')->get(),
+            'daftarPenulis' => Author::orderBy('name')->get(),
         ]);
     }
     public function store(Request $request)
     {
         $validated = $request->validate($this->aturan(), $this->pesan());
+
 
         // Isi cover di $validated adalah objek berkas upload (atau null), bukan
         // nama berkas untuk database -- buang dulu, lalu isi dengan hasil store().
@@ -90,6 +93,7 @@ class BookController extends Controller
             'buku' => Book::findOrFail($id),
             'daftarKategori' => Category::orderBy('name')->get(),
             'daftarPenerbit' => Publisher::orderBy('name')->get(),
+            'daftarPenulis' => Author::orderBy('name')->get(),
         ]);
     }
 
@@ -140,6 +144,7 @@ class BookController extends Controller
             'published_year' => 'nullable|integer|min:1900|max:2100',
             'stock' => 'required|integer|min:0|max:100000',            
             'cover' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'author_id' => 'nullable|exists:authors,id'
         ];
     }
     private function pesan(): array
@@ -169,6 +174,7 @@ class BookController extends Controller
             'cover.mimes' => 'Sampul harus berformat JPG atau PNG.',
             'cover.max' => 'Ukuran sampul maksimal 2 MB.',
             'cover.uploaded' => 'Sampul gagal diunggah. Periksa ukuran berkas (maksimal 2 MB).',
+            'author_id.exists' => 'Penulis yang dipilih tidak ditemukan.',
         ];
     }
 

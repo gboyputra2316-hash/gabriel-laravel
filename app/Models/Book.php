@@ -17,6 +17,7 @@ class Book extends Model
         'published_year',
         'stock',        
         'cover',
+        'author_id',
     ];
 
     public function category(): BelongsTo
@@ -36,5 +37,10 @@ class Book extends Model
                 ? asset('storage/' . $this->cover)
                 : asset('images/sampul-placeholder.png'),
         );
+    }
+
+    public function author(): BelongsTo
+    {
+        return $this->belongsTo(Author::class);
     }
 }

@@ -21,7 +21,12 @@ class AuthorController extends Controller
 
     public function store(Request $request)
     {
-        Author::create($request->only(['name', 'country']));
+        $data = $request->validate([
+            'name'    => 'required|max:100|unique:authors,name',
+            'country' => 'nullable|max:100',
+        ], $this->pesan());
+
+        Author::create($data);
 
         return redirect()->route('penulis.index')
             ->with('success', 'Penulis berhasil ditambahkan.');
@@ -37,7 +42,13 @@ class AuthorController extends Controller
     public function update(Request $request, string $id)
     {
         $penulis = Author::findOrFail($id);
-        $penulis->update($request->only(['name', 'country']));
+
+        $data = $request->validate([
+            'name'    => 'required|max:100|unique:authors,name,' . $penulis->id,
+            'country' => 'nullable|max:100',
+        ], $this->pesan());
+
+        $penulis->update($data);
 
         return redirect()->route('penulis.index')
             ->with('success', 'Penulis berhasil diubah.');
@@ -49,5 +60,14 @@ class AuthorController extends Controller
 
         return redirect()->route('penulis.index')
             ->with('success', 'Penulis berhasil dihapus.');
+    }
+    private function pesan(): array
+    {
+        return [
+            'name.required' => 'Nama penulis wajib diisi.',
+            'name.max'      => 'Nama penulis maksimal 100 karakter.',
+            'name.unique'   => 'Nama penulis sudah terdaftar.',
+            'country.max'   => 'Negara maksimal 100 karakter.',
+        ];
     }
 }
