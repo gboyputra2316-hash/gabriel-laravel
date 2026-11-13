@@ -3,6 +3,7 @@
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\PublisherController;
+use App\Http\Controllers\AuthorController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -19,3 +20,6 @@ Route::resource('kategori', CategoryController::class)->except('show');
 
 // Latihan transfer: pola yang sama persis untuk penerbit.
 Route::resource('penerbit', PublisherController::class)->except('show');
+
+// Latihan transfer: pola yang sama persis untuk penulis.
+Route::resource('penulis', AuthorController::class)->except('show');
