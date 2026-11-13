@@ -56,7 +56,14 @@ class AuthorController extends Controller
 
     public function destroy(string $id)
     {
-        Author::findOrFail($id)->delete();
+        $penulis = Author::findOrFail($id);
+
+        if ($penulis->books()->exists()) {
+            return redirect()->route('penulis.index')
+                ->with('error', 'Penulis tidak bisa dihapus karena masih dipakai oleh buku.');
+        }
+
+        $penulis->delete();
 
         return redirect()->route('penulis.index')
             ->with('success', 'Penulis berhasil dihapus.');

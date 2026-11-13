@@ -9,11 +9,12 @@
     </div>
 
     <form action="{{ route('buku.index') }}" method="GET" class="row g-2 mb-4">
-        <div class="col-md-4">
+        <div class="col-md-5">
             <input type="text" name="q" class="form-control"
                    placeholder="Cari judul atau penulis" value="{{ $kataKunci }}">
         </div>
-        <div class="col-md-3">
+
+        <div class="col-md-4">
             <select name="kategori" class="form-select">
                 <option value="">Semua kategori</option>
                 @foreach ($daftarKategori as $kategori)
@@ -23,24 +24,28 @@
                 @endforeach
             </select>
         </div>
+
         <div class="col-md-3">
             <select name="penerbit" class="form-select">
                 <option value="">Semua penerbit</option>
+
                 @foreach ($daftarPenerbit as $penerbit)
-                    <option value="{{ $penerbit->id }}" @selected($penerbitId == $penerbit->id)>
+                    <option value="{{ $penerbit->id }}"
+                        @selected($penerbitId == $penerbit->id)>
                         {{ $penerbit->name }}
                     </option>
                 @endforeach
             </select>
         </div>
-        <div class="col-md-2 d-flex gap-2">
+
+        </div>
+        <div class="col-md-3 d-flex gap-2">
             <button type="submit" class="btn btn-primary">Cari</button>
             @if ($kataKunci || $kategoriId || $penerbitId)
                 <a href="{{ route('buku.index') }}" class="btn btn-outline-secondary">Reset</a>
             @endif
         </div>
     </form>
-
 
     @if ($daftarBuku->isEmpty())
         <div class="alert alert-info">Tidak ada buku yang cocok.</div>
@@ -54,11 +59,18 @@
             @foreach ($daftarBuku as $buku)
                 <div class="col">
                     <div class="card h-100 kartu-buku">
+                            @if ($buku->cover)
                         <img src="{{ $buku->cover_url }}" class="card-img-top" alt="Sampul {{ $buku->title }}">
+                            @else
+                        <div class="kartu-tanpa-sampul card-img-top d-flex align-items-center justify-content-center text-muted">
+                        Tidak ada sampul
+                        </div>
+                            @endif
                         <div class="card-body d-flex flex-column">
                             <span class="badge bg-secondary align-self-start mb-2">{{ $buku->category->name }}</span>
                             <h5 class="card-title">{{ $buku->title }}</h5>
                             <p class="card-text text-muted mb-1">{{ $buku->author_name }}</p>
+                            <p class="card-text small text-muted mb-1">Penulis terdaftar: {{ $buku->author?->name ?? 'Belum dipilih' }}</p>
                             <p class="card-text small text-muted mb-1">{{ $buku->publisher?->name ?? 'Penerbit belum diisi' }}</p>
                             <p class="card-text harga-buku mb-1">Rp{{ number_format($buku->price, 0, ',', '.') }}</p>
                             @if ($buku->stock > 0)
@@ -74,7 +86,8 @@
         </div>
 
         <div class="mt-4">
-            {{ $daftarBuku->links() }}
+            {{ $daftarBuku->withQueryString()->links() }}
         </div>
+
     @endif
 @endsection

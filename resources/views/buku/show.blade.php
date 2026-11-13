@@ -40,6 +40,12 @@
                     <li>
                         <a href="{{ route('buku.show', $serupa->id) }}">{{ $serupa->title }}</a>
                         <span class="text-muted">— {{ $serupa->author_name }}</span>
+                        <p>Penulis (teks): {{ $buku->author_name }}</p>
+                        <p class="text-muted mb-1">Penulis: {{ $buku->author_name }}</p>
+                        @if ($buku->author)
+                            <p class="text-muted mb-1">Penulis terdaftar: {{ $buku->author->name }}</p>
+                        @endif
+<p class="text-muted">Penerbit: {{ $buku->publisher?->name ?? 'belum diisi' }}</p>
                     </li>
                 @endforeach
             </ul>
